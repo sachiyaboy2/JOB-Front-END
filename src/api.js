@@ -83,22 +83,7 @@ api.interceptors.response.use(
   },
 );
 
-/** Pull a human-readable message out of whatever the API returned. */
-export function apiErrorMessage(error, fallback = "Something went wrong. Please try again.") {
-  const data = error?.response?.data;
-  if (typeof data === "string" && data.trim()) return data;
-  if (data && typeof data === "object") {
-    return (
-      data.message ||
-      data.error ||
-      (Array.isArray(data.errors) && data.errors.length ? String(data.errors[0]) : null) ||
-      fallback
-    );
-  }
-  if (error?.code === "ECONNABORTED") return "The server took too long to respond. Please try again.";
-  if (error?.message === "Network Error") return "Cannot reach the server. Check that the API is running.";
-  return fallback;
-}
+export { apiErrorMessage } from "./utils/apiErrorMessage.js";
 
 /* -------------------------------------------------------------------------- */
 /*  Auth                                                                      */

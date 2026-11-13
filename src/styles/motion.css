@@ -1,0 +1,186 @@
+/* ==========================================================================
+   OpenBot Design System — Motion
+   Import AFTER tokens.css. Every animation here respects
+   prefers-reduced-motion (the global rule at the bottom kills them all).
+
+   Usage in JSX:
+     <div className="reveal" data-reveal>...</div>          -> fades up on scroll
+     <div className="reveal" data-reveal data-delay="120"> -> staggered
+     <div className="tilt">...</div>                        -> 3D pointer tilt
+     <div className="float">...</div>                       -> gentle float
+     <div className="shimmer-text">...</div>                -> animated gradient text
+   ========================================================================== */
+
+@keyframes ds-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes ds-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ds-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ds-scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ds-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes ds-pulse-ring {
+  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-aurora-500) 45%, transparent); }
+  70%  { box-shadow: 0 0 0 14px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+@keyframes ds-aurora-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(6%, -4%, 0) scale(1.08); }
+  66%      { transform: translate3d(-5%, 5%, 0) scale(0.95); }
+}
+
+@keyframes ds-spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ds-gradient-pan {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes ds-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* --------------------------------------------------------------------------
+   Scroll reveal. The IntersectionObserver is attached by the `useReveal`
+   helper (see DESIGN-SYSTEM.md) which adds .is-visible when in view.
+   Until then the element is hidden — do not use `reveal` on above-the-fold
+   hero content, or give it `data-reveal="immediate"`.
+   -------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 700ms var(--ease-out-expo),
+    transform 700ms var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 3D pointer tilt. JS sets --rx / --ry on the element. */
+.tilt {
+  transform:
+    perspective(1100px)
+    rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg))
+    translateZ(0);
+  transition: transform 260ms var(--ease-out-expo), box-shadow 260ms var(--ease-out-expo);
+}
+.tilt.is-tilting {
+  transition: transform 80ms linear, box-shadow 260ms var(--ease-out-expo);
+}
+
+/* Gentle float */
+.float {
+  animation: ds-float 6s ease-in-out infinite;
+}
+
+/* Animated gradient text */
+.shimmer-text {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-aurora-500),
+    var(--color-cyan-glow),
+    var(--color-violet-glow),
+    var(--color-aurora-500)
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ds-gradient-pan 7s linear infinite;
+}
+
+/* Large ambient gradient blobs behind a hero */
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: ds-aurora-drift 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* A glowing conic ring for hero decoration */
+.aurora-ring {
+  position: absolute;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-aurora-400) 60%, transparent) 25%,
+    transparent 50%,
+    color-mix(in oklab, var(--color-cyan-glow) 55%, transparent) 75%,
+    transparent 100%
+  );
+  filter: blur(28px);
+  animation: ds-spin-slow 22s linear infinite;
+  pointer-events: none;
+}
+
+/* Page transition wrapper */
+.page-enter {
+  animation: ds-fade-up 480ms var(--ease-out-expo) both;
+}
+
+/* Modal / popover entry */
+.pop-in {
+  animation: ds-scale-in 260ms var(--ease-spring) both;
+}
+
+/* Live / "new" pulse dot */
+.pulse-dot {
+  animation: ds-pulse-ring 2.2s infinite;
+}
+
+/* Number / logo marquee */
+.marquee-track {
+  animation: ds-marquee 28s linear infinite;
+  will-change: transform;
+}
+
+/* Respect the user's motion preference everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .tilt {
+    transform: none !important;
+  }
+}

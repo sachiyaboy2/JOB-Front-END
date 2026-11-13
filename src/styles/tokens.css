@@ -1,0 +1,315 @@
+/* ==========================================================================
+   OpenBot Design System — Design Tokens
+   Tailwind CSS v4 (@theme). Import this file FIRST in your project's index.css:
+
+     @import "tailwindcss";
+     @import "../_design-system/tokens.css";
+     @import "../_design-system/motion.css";
+
+   Dark mode: Tailwind v4 needs the custom variant declared once:
+
+     @custom-variant dark (&:where(.dark, .dark *));
+
+   The <html> element gets class="dark" when the user picks dark mode.
+   ========================================================================== */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* ---- Typography ------------------------------------------------------ */
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- Brand: Aurora (shared accent across every project) --------------- */
+  --color-aurora-50:  #eef2ff;
+  --color-aurora-100: #e0e7ff;
+  --color-aurora-200: #c7d2fe;
+  --color-aurora-300: #a5b4fc;
+  --color-aurora-400: #818cf8;
+  --color-aurora-500: #6366f1;
+  --color-aurora-600: #4f46e5;
+  --color-aurora-700: #4338ca;
+  --color-aurora-800: #3730a3;
+  --color-aurora-900: #312e81;
+
+  --color-cyan-glow:  #22d3ee;
+  --color-violet-glow: #a855f7;
+  --color-amber-glow: #f59e0b;
+
+  /* ---- Surface & text (light theme defaults) --------------------------- */
+  --color-canvas:   #f7f8fc;
+  --color-canvas-2: #eef1f8;
+  --color-surface:  #ffffff;
+  --color-surface-2:#f2f4fa;
+  --color-elevated: #ffffff;
+  --color-line:     #e2e6f0;
+  --color-line-strong: #cbd2e3;
+  --color-ink:      #131a2e;
+  --color-ink-2:    #3d4766;
+  --color-ink-muted:#6b7694;
+  --color-ink-invert:#ffffff;
+
+  /* ---- Status ---------------------------------------------------------- */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger:  #ef4444;
+  --color-info:    #38bdf8;
+
+  /* ---- Radii / shadow / motion ----------------------------------------- */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-2xl: 36px;
+
+  --shadow-e1: 0 1px 2px rgb(16 24 40 / 0.06), 0 1px 3px rgb(16 24 40 / 0.10);
+  --shadow-e2: 0 4px 8px -2px rgb(16 24 40 / 0.10), 0 2px 4px -2px rgb(16 24 40 / 0.06);
+  --shadow-e3: 0 12px 24px -6px rgb(16 24 40 / 0.14), 0 4px 8px -4px rgb(16 24 40 / 0.08);
+  --shadow-e4: 0 24px 48px -12px rgb(16 24 40 / 0.20), 0 8px 16px -8px rgb(16 24 40 / 0.10);
+  --shadow-glow: 0 0 0 1px rgb(99 102 241 / 0.25), 0 12px 40px -8px rgb(99 102 241 / 0.45);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur-base: 240ms;
+  --dur-slow: 480ms;
+}
+
+/* ==========================================================================
+   Dark theme overrides.
+   Because Tailwind v4 resolves @theme values into CSS custom properties, the
+   cleanest dark mode is to redefine those same properties under .dark.
+   ========================================================================== */
+.dark {
+  --color-canvas:   #070a16;
+  --color-canvas-2: #0b1020;
+  --color-surface:  #111830;
+  --color-surface-2:#161f3d;
+  --color-elevated: #1a2445;
+  --color-line:     #26315a;
+  --color-line-strong: #364473;
+  --color-ink:      #eef1fb;
+  --color-ink-2:    #c2cbe4;
+  --color-ink-muted:#8a95b5;
+  --color-ink-invert:#0b1020;
+
+  --shadow-e1: 0 1px 2px rgb(0 0 0 / 0.40);
+  --shadow-e2: 0 4px 10px -2px rgb(0 0 0 / 0.50);
+  --shadow-e3: 0 14px 30px -8px rgb(0 0 0 / 0.60);
+  --shadow-e4: 0 28px 60px -14px rgb(0 0 0 / 0.70);
+  --shadow-glow: 0 0 0 1px rgb(129 140 248 / 0.35), 0 14px 46px -8px rgb(99 102 241 / 0.55);
+}
+
+/* ==========================================================================
+   Base layer
+   ========================================================================== */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    background-image:
+      radial-gradient(120% 90% at 12% -10%, color-mix(in oklab, var(--color-aurora-500) 22%, transparent) 0%, transparent 55%),
+      radial-gradient(90% 80% at 95% 0%, color-mix(in oklab, var(--color-cyan-glow) 16%, transparent) 0%, transparent 50%),
+      radial-gradient(80% 70% at 60% 110%, color-mix(in oklab, var(--color-violet-glow) 14%, transparent) 0%, transparent 55%);
+    background-attachment: fixed;
+  }
+
+  /* Focus: always visible, never removed. */
+  :focus-visible {
+    outline: 3px solid var(--color-aurora-500);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+  .dark :focus-visible {
+    outline-color: var(--color-aurora-300);
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-aurora-500) 30%, transparent);
+    color: var(--color-ink);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background-color: var(--color-ink-muted); background-clip: content-box; }
+}
+
+/* ==========================================================================
+   Component primitives. Use these classes instead of ad-hoc styling so every
+   project looks like one product.
+   ========================================================================== */
+@layer components {
+  /* ---- Surfaces -------------------------------------------------------- */
+  .surface {
+    @apply bg-surface border border-line rounded-lg;
+    box-shadow: var(--shadow-e1);
+  }
+
+  .surface-elevated {
+    @apply bg-elevated border border-line rounded-lg;
+    box-shadow: var(--shadow-e3);
+  }
+
+  /* Frosted panel. Needs a coloured backdrop to read as glass. */
+  .glass {
+    @apply border border-line/60 rounded-lg;
+    background: color-mix(in oklab, var(--color-surface) 62%, transparent);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: var(--shadow-e2);
+  }
+  .dark .glass {
+    background: color-mix(in oklab, var(--color-surface) 55%, transparent);
+    border-color: color-mix(in oklab, var(--color-aurora-300) 22%, transparent);
+  }
+
+  /* ---- Buttons --------------------------------------------------------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold
+           transition-all duration-200 ease-[var(--ease-out-expo)] disabled:cursor-not-allowed disabled:opacity-50
+           active:scale-[0.97];
+  }
+  .btn-primary {
+    @apply text-white;
+    background-image: linear-gradient(135deg, var(--color-aurora-500), var(--color-aurora-700) 55%, var(--color-violet-glow));
+    box-shadow: var(--shadow-e2), 0 0 0 0 rgb(99 102 241 / 0.5);
+  }
+  .btn-primary:hover {
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+  .btn-secondary {
+    @apply bg-surface-2 text-ink border border-line;
+  }
+  .btn-secondary:hover {
+    @apply border-line-strong;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-e2);
+  }
+  .btn-ghost {
+    @apply text-ink-2 border border-transparent bg-transparent;
+  }
+  .btn-ghost:hover { @apply bg-surface-2 text-ink; }
+  .btn-danger {
+    @apply text-danger border border-danger/40 bg-danger/5;
+  }
+  .btn-danger:hover { @apply bg-danger/12; }
+
+  /* ---- Form fields ----------------------------------------------------- */
+  .field {
+    @apply w-full rounded-md border border-line bg-surface px-3.5 py-2.5 text-sm text-ink
+           placeholder:text-ink-muted transition-all duration-200
+           focus:border-aurora-500 focus:ring-4 focus:ring-aurora-500/15 focus:outline-none
+           disabled:bg-surface-2 disabled:text-ink-muted;
+  }
+  .field-invalid {
+    @apply border-danger focus:border-danger focus:ring-danger/15;
+  }
+  .label {
+    @apply block text-sm font-semibold text-ink-2 mb-1.5;
+  }
+
+  /* ---- 3D --------------------------------------------------------------- */
+  /* A card that tilts in 3D as the pointer moves over it. Pair with the
+     `tilt` component (3D tilt card) which sets --rx / --ry on the element. */
+  .card-3d {
+    @apply relative bg-surface border border-line rounded-lg;
+    box-shadow: var(--shadow-e1);
+    transform-style: preserve-3d;
+    transform:
+      perspective(1100px)
+      rotateX(var(--rx, 0deg))
+      rotateY(var(--ry, 0deg))
+      translateZ(0);
+    transition: transform 320ms var(--ease-out-expo), box-shadow 320ms var(--ease-out-expo);
+    will-change: transform;
+  }
+  .card-3d:hover {
+    box-shadow: var(--shadow-e4);
+  }
+  /* Depth layers inside a card-3d. */
+  .depth-1 { transform: translateZ(28px); }
+  .depth-2 { transform: translateZ(56px); }
+  .depth-3 { transform: translateZ(84px); }
+
+  /* Gradient border card */
+  .card-glow {
+    @apply relative rounded-lg;
+    background:
+      linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+      linear-gradient(135deg, var(--color-aurora-500), var(--color-cyan-glow), var(--color-violet-glow)) border-box;
+    border: 1px solid transparent;
+  }
+
+  /* ---- Badges / pills --------------------------------------------------- */
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold
+           border border-line bg-surface-2 text-ink-2;
+  }
+  .badge-accent {
+    @apply border-transparent text-white;
+    background-image: linear-gradient(135deg, var(--color-aurora-500), var(--color-violet-glow));
+  }
+  .badge-success { @apply border-transparent bg-success/12 text-success; }
+  .badge-warning { @apply border-transparent bg-warning/15 text-warning; }
+  .badge-danger  { @apply border-transparent bg-danger/12 text-danger; }
+  .badge-info    { @apply border-transparent bg-info/12 text-info; }
+
+  /* ---- Navigation ------------------------------------------------------- */
+  .nav-link {
+    @apply relative rounded-md px-3 py-2 text-sm font-medium text-ink-2 transition-colors duration-200;
+  }
+  .nav-link:hover { @apply text-ink bg-surface-2; }
+  .nav-link-active { @apply text-ink; }
+  .nav-link-active::after {
+    content: "";
+    @apply absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full;
+    background-image: linear-gradient(90deg, var(--color-aurora-500), var(--color-cyan-glow));
+  }
+
+  /* ---- Tables ----------------------------------------------------------- */
+  .table-shell {
+    @apply overflow-hidden bg-surface border border-line rounded-lg;
+    box-shadow: var(--shadow-e1);
+  }
+  .table-shell table { @apply w-full text-sm; }
+  .table-shell thead th {
+    @apply bg-surface-2 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted;
+  }
+  .table-shell tbody tr { @apply border-t border-line; }
+  .table-shell tbody tr:hover { @apply bg-surface-2/70; }
+  .table-shell tbody td { @apply px-4 py-3; }
+
+  /* ---- Skeleton --------------------------------------------------------- */
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-surface-2;
+  }
+  .skeleton::after {
+    content: "";
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, var(--color-ink) 8%, transparent),
+      transparent
+    );
+    animation: ds-shimmer 1.6s infinite;
+  }
+}

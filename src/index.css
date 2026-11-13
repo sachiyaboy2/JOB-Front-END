@@ -1,0 +1,126 @@
+/* ==========================================================================
+   Job Portal — application stylesheet.
+
+   Import order (design system contract):
+     1. tailwindcss      — Tailwind v4 engine
+     2. styles/tokens   — colour / shadow / radius tokens + primitives
+     3. styles/motion   — animations, reveal, tilt, reduced-motion guard
+   ========================================================================== */
+
+@import "tailwindcss";
+@import "./styles/tokens.css";
+@import "./styles/motion.css";
+
+/* --------------------------------------------------------------------------
+   App-level utilities. Only tokens are used for colour — never raw hex.
+   -------------------------------------------------------------------------- */
+@layer utilities {
+  /* CSS-only aurora backdrop for pages without the WebGL hero. */
+  .aurora-bg {
+    position: relative;
+    isolation: isolate;
+  }
+  .aurora-bg::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 34rem;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(50% 60% at 18% 20%, color-mix(in oklab, var(--color-aurora-500) 26%, transparent) 0%, transparent 70%),
+      radial-gradient(45% 55% at 82% 12%, color-mix(in oklab, var(--color-cyan-glow) 20%, transparent) 0%, transparent 70%),
+      radial-gradient(40% 50% at 55% 0%, color-mix(in oklab, var(--color-violet-glow) 18%, transparent) 0%, transparent 72%);
+    filter: blur(28px);
+    opacity: 0.85;
+  }
+  .dark .aurora-bg::before {
+    opacity: 1;
+    filter: blur(34px);
+  }
+
+  /* Thin scrollbars inside filter rails and tables. */
+  .scroll-slim {
+    scrollbar-width: thin;
+  }
+  .scroll-slim::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scroll-slim::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 999px;
+  }
+  .scroll-slim::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Base tweaks
+   -------------------------------------------------------------------------- */
+@layer base {
+  #root {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Keyboard users get a visible ring even on dark surfaces. */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-aurora-500);
+    outline-offset: 2px;
+  }
+
+  /* Long URLs and IDs never break the layout. */
+  a,
+  code {
+    overflow-wrap: anywhere;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Component tweaks that depend on the design-system primitives.
+   -------------------------------------------------------------------------- */
+@layer components {
+  /* Glass panel with a soft gradient hairline — used over the aurora hero. */
+  .glass-panel {
+    background: color-mix(in oklab, var(--color-surface) 66%, transparent);
+    backdrop-filter: blur(20px) saturate(165%);
+    -webkit-backdrop-filter: blur(20px) saturate(165%);
+    border: 1px solid color-mix(in oklab, var(--color-aurora-300) 26%, transparent);
+    box-shadow: var(--shadow-e3);
+  }
+  .dark .glass-panel {
+    background: color-mix(in oklab, var(--color-surface) 58%, transparent);
+    border-color: color-mix(in oklab, var(--color-aurora-300) 22%, transparent);
+  }
+
+  /* Clickable card wrapper — keeps the whole card a single tab stop. */
+  .card-link {
+    @apply block h-full rounded-lg;
+  }
+
+  /* Gradient text for hero accents. */
+  .text-gradient {
+    background-image: linear-gradient(110deg, var(--color-aurora-500), var(--color-cyan-glow) 45%, var(--color-violet-glow));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
